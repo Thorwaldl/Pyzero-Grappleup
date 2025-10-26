@@ -56,6 +56,8 @@ def draw():
 
 
 def draw_menu():
+
+
     screen.draw.filled_rect(start, (255, 0, 0))
     screen.draw.filled_rect(mute, (0, 255, 0))
     screen.draw.filled_rect(quit_game, (0, 0, 255))
@@ -79,9 +81,10 @@ def draw_game():
     player.draw()
     ufo.draw()
     for ground in ground_list:
+        screen.draw.filled_rect(ground.ground, ground.color)
+        screen.draw.filled_rect(ground.roof, ground.color)
         screen.draw.filled_rect(ground.plataform, ground.color)
-        screen.draw.filled_rect(ground.ground, (255, 255, 255))
-        screen.draw.filled_rect(ground.roof, (255, 255, 255))
+
     for enemylis in enemies_list:
         enemylis.act.draw()
 
@@ -104,7 +107,7 @@ def update():
         for enemylis in enemies_list:
             enemylis.enemy_update()
         if player.colliderect(ufo):
-            print('win')
+            #print('win')
             game_state='win_screen'
 
 def movement_manager():
@@ -161,7 +164,7 @@ def player_movement_manager():
         player_state='jump'
         if not game_mute:
             sounds.jump.play()
-        print('jump')
+        #print('jump')
 
     if not(collision_plat and (collision_ground or collision_roof)):
         pass
@@ -237,7 +240,7 @@ def collision_ground_manager(old_x,old_y):
             player.x=old_x
             return 1
         if player.colliderect(plat.roof):
-            print("TETO")
+            #print("TETO")
             player.y=old_y
             velocity_y=0+gravity
             return 2
@@ -248,14 +251,14 @@ def collision_ground_manager(old_x,old_y):
 def on_mouse_down(pos):
     global game_state
     global game_mute
-    print("Mouse clicked", pos)
+    #print("Mouse clicked", pos)
     #debug
     #if game_state=='Game':
     #    player.x=pos[0]
     #    player.y=pos[1]
     if game_state=='Main_Menu':
         if (pos[0]>20 and pos[0]<270) and (pos[1]>25 and pos[1]<50):
-            print("Start")
+            #print("Start")
             game_start()
             game_state='Game'
 
@@ -263,34 +266,34 @@ def on_mouse_down(pos):
 
             if game_mute:
                 game_mute=False
-                print('unmuted')
+                #print('unmuted')
             else:
                 game_mute=True
-                print('muted')
+                #print('muted')
 
         if (pos[0]>20 and pos[0]<270) and (pos[1]>80 and pos[1]<110):
-            print("Quit")
+            #print("Quit")
             quit()
 
 def game_start():
-    print("Starting game")
+    #print("Starting game")
 
     if not game_mute:
         music.play('706366__ztidlen__instrumentaliasound-instrumentalgenre-4')
         music.set_volume(0.4)
 
-    ground_list.append(class_plataform((0, 580), (WIDTH, 40), (102, 255, 102)))
+    ground_list.append(class_plataform((0, 580), (WIDTH, 40), 102, 255, 102))
 
-    ground_list.append(class_plataform((400, 470), (200, 20), (200, 150, 50)))
-    ground_list.append(class_plataform((700, 370), (150, 20), (150, 100, 255)))
+    ground_list.append(class_plataform((400, 470), (200, 20), 200, 150, 50))
+    ground_list.append(class_plataform((700, 370), (150, 20), 150, 100, 255))
 
-    ground_list.append(class_plataform((950, 320), (180, 20), (200, 150, 50)))
-    ground_list.append(class_plataform((1050, 220), (50, 20), (200, 150, 50)))
+    ground_list.append(class_plataform((950, 320), (180, 20), 200, 150, 50))
+    ground_list.append(class_plataform((1050, 220), (50, 20), 200, 150, 50))
 
-    ground_list.append(class_plataform((640, 170), (280, 20), (100, 150, 50)))
+    ground_list.append(class_plataform((640, 170), (280, 20), 100, 150, 50))
 
-    ground_list.append(class_plataform((50, 250), (500, 20), (100, 150, 50)))
-    ground_list.append(class_plataform((50, 140), (50, 20), (100, 250, 150)))
+    ground_list.append(class_plataform((50, 250), (500, 20), 100, 150, 50))
+    ground_list.append(class_plataform((50, 140), (50, 20), 100, 250, 150))
 
 
 
@@ -307,7 +310,7 @@ def game_start():
 
 
 def player_hit_manager():
-    print('bzz')
+    #print('bzz')
     if not game_mute:
         sounds.eep.play()
     player.topright = starting_position[0],starting_position[1]
@@ -346,13 +349,14 @@ class class_enemy:
 
 
 class class_plataform:
-    def __init__(self,coord, size, color):
+    def __init__(self,coord, size, red,green,blue):
         self.coord=coord
         self.size = size
-        self.color=color
+        self.color=(red,green,blue)
         self.plataform = Rect(coord, size)
-        self.ground = Rect ((coord[0]+1,coord[1]-4),(size[0]-2,5))
+        self.ground = Rect ((coord[0]+1,coord[1]-1),(size[0]-2,5))
         self.roof=Rect ((coord[0]+1,coord[1]+(size[1]-4)),(size[0]-2,5))
+
 
 
 
@@ -369,6 +373,8 @@ class animator:
         if self.timer %  10 == 0:
             self.index = (self.index + 1) % len(self.img_list)
             self.act.image = self.img_list[self.index]
+
+
 
 
 
